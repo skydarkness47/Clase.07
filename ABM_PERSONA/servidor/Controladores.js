@@ -1,39 +1,32 @@
 miApp.service('Grilla', function ($http) {
         
+var Url = 'http://localhost/Clase.07/ws1/';
 
-     this.TraerTodos = function(){
+  this.TraerTodos = TraerTodos;
+  function TraerTodos(){
+    return $http.get(Url + 'personas')
+      .then(function(respuesta) { 
+      console.info(respuesta.data);    
+       return respuesta.data
 
-   return $http.get('http://localhost:8080/Clase.07/ws1/personas')
-    .then(function(respuesta) {   
-
-         return respuesta;
-
-    },function errorCallback(response) {
-             $scope.ListadoPersonas= [];
-
-        });
-
-     };
+    })
+  };
+    
 
 
-     this.Borrar = function(){
+    this.BorrarObjeto = BorrarObjeto;
 
-$http.delete("http://localhost:8080/Clase.07/ws1/personas/" + persona.id) 
- .then(function(respuesta) {   
-    $http.get('http://localhost:8080/Clase.07/ws1/personas')
-        .then(function(respuesta) {     
-        return  respuesta.data;
-
-    },function errorCallback(response) {
-             $scope.ListadoPersonas= [];
-
-        });
-
-    },function errorCallback(response) {        
-        //aca se ejecuta cuando hay errores
-        console.log( response);           
+   function BorrarObjeto(id){
+    console.info(id);
+    return $http.delete(Url + "personas/" + id) 
+    .then(function(respuesta) {
+      return TraerTodos();
     });
+   };
 
 
-     };
+
+
+
+
   })

@@ -1,35 +1,41 @@
-miApp.controller('controlGrilla', function($scope, Grilla, i18nService, uiGridConstants) {
-    $scope.titulo = "Configuracion Campos";
-    console.info(Grilla);
-    $scope.datos ={}
-    Grilla.TraerTodos().
-    then(function(respuesta){
-      $scope.datos = respuesta.data;
+miApp.controller('controlGrilla', function($scope, Grilla, i18nService,$state) {
   
+Grilla.TraerTodos()
+ 	.then(function(respuesta) {   	
+ 		//console.info(respuesta);
+      	 $scope.ListadoPersonas = respuesta;
+
+    },function(error){
+        console.info(error);
       });
 
-    console.info($scope.datos);
+ 	
+ 	$scope.BorrarObjeto=function(persona){
+console.info(persona);
+	Grilla.BorrarObjeto(persona.id)
+ 	.then(function(respuesta) {   	
+ 		console.info(console.info(persona));
+      	 $scope.ListadoPersonas = respuesta;
 
+    },function(error){
+        console.info(error);
+      });
 
-    // Objeto de configuracion de la grilla.
-    $scope.gridOptions = {};
-    $scope.gridOptions.paginationPageSizes = [25, 50, 75];
-    // Configuracion de la paginacion
-    $scope.gridOptions.paginationPageSize = 25;
- 
-    $scope.gridOptions.columnDefs = columDefs();
-    // Activo la busqueda en todos los campos
-          $scope.gridOptions.data = $scope.datos;
+ 	}
+  
+  
+$scope.Modificar=function(persona)
+  {
+    console.info(persona);
+    $state.go("persona.modificacion", persona);
+  };
+  
 
-  //  $scope.gridOptions.enableFiltering = true;
-    // Configuracion del idioma.
-    i18nService.setCurrentLang('es');
-
-function columDefs () {
-  return [
-        { field: 'nombre', name: 'nombre'},
-        ];
-    }
+$scope.ModificarObjeto=function(persona)
+  {
+    console.info(persona);
+    $state.go("persona.modificacion", persona);
+  };
 
   
   })

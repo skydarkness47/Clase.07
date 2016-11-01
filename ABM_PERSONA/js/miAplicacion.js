@@ -53,7 +53,7 @@ $authProvider.authHeader = 'data';
 				cache: false,
 				views: {
 					"contenido":{
-					templateUrl:"./views/personaGrilla.html",
+					templateUrl:"./AbmPersona/personaGrilla.html",
 					controller:"controlGrilla",
 				cache: false
 						}
@@ -176,7 +176,7 @@ miApp.controller("controlPersonaMenu",function($scope,$state){
 miApp.controller("controlPersonaAlta",function($scope,$state,FileUploader,$http){
 	
 //inicio las variables
-	$scope.SubirdorArchivos = new FileUploader({url:'http://localhost:8080/Clase.07/ws1/archivos'});  
+	$scope.SubirdorArchivos = new FileUploader({url:'http://localhost/Clase.07/ws1/archivos'});  
 	$scope.persona={};
   	$scope.persona.nombre= "natalia" ;
   	$scope.persona.dni= "1" ;
@@ -187,7 +187,7 @@ miApp.controller("controlPersonaAlta",function($scope,$state,FileUploader,$http)
 
 	$scope.SubirdorArchivos.onCompleteAll = function(item, response, status, headers) {
 
-            $http.post('http://localhost:8080/Clase.07/ws1/personas/'+ JSON.stringify($scope.persona)) //+ JSON.stringify($scope.persona))
+            $http.post('http://localhost/Clase.07/ws1/personas/'+ JSON.stringify($scope.persona)) //+ JSON.stringify($scope.persona))
 			  .then(function(respuesta) {     	
 			 //aca se ejetuca si retorno sin errores 
 			 		console.info(respuesta);
@@ -223,48 +223,6 @@ miApp.controller("controlPersonaAlta",function($scope,$state,FileUploader,$http)
 
 
 
-miApp.controller("controlPersonaGrilla",function($scope,$state,$http){
-
-	
- 	$http.get('http://localhost:8080/Clase.07/ws1/personas')
- 	.then(function(respuesta) {   	
-      	 $scope.ListadoPersonas = respuesta.data;
-
-    },function errorCallback(response) {
-     		 $scope.ListadoPersonas= [];
-
-     	});
-
- 	
- 	$scope.Borrar=function(persona){
-
-
-$http.delete("http://localhost:8080/Clase.07/ws1/personas/" + persona.id) 
- .then(function(respuesta) {   
- 	$http.get('http://localhost:8080/Clase.07/ws1/personas')
- 		.then(function(respuesta) { 	
-      	$scope.ListadoPersonas = respuesta.data;
-
-    },function errorCallback(response) {
-     		 $scope.ListadoPersonas= [];
-
-     	});
-
-    },function errorCallback(response) {        
-        //aca se ejecuta cuando hay errores
-        console.log( response);           
-    });
-
-
- 	}
-
-
-$scope.Modificar=function(persona)
-	{
-		$state.go("persona.modificacion", persona);
-	};
-
-});
 
 miApp.controller("controlLogin",function($scope,$state,$auth){
 
@@ -399,7 +357,47 @@ miApp.controller('controlModificacion', function($scope, $http, $state, $statePa
 {
 	$scope.persona={};
 	$scope.DatoTest="**Modificar**";
-	$scope.SubirdorArchivos = new FileUploader({url:'http://localhost:8080/Clase.07/ws1/archivos'});  
+	$scope.SubirdorArchivos = new FileUploader({url:'http://localhost/Clase.07/ws1/archivos'});  
+	$scope.persona.id=$stateParams.id;
+	$scope.persona.nombre=$stateParams.nombre;
+	$scope.persona.apellido=$stateParams.apellido;
+	$scope.persona.dni=$stateParams.dni;
+	$scope.persona.foto=$stateParams.foto;
+
+	$scope.SubirdorArchivos.onSuccessItem=function(item, response, status, headers)
+	{
+		$http.put('http://localhost/Clase.07/ws1/personas/'+ JSON.stringify($scope.persona))
+		.then(function(respuesta) 
+		{
+			$state.go("persona.Grilla");
+		},
+		function errorCallback(response)
+		{
+			//aca se ejecuta cuando hay errores
+			console.log( response);     			
+		});
+		};
+
+	$scope.Modificar=function(persona)
+	{
+	
+		if($scope.SubirdorArchivos.queue[0]!=undefined)
+		{
+			var nombreFoto = $scope.SubirdorArchivos.queue[0]._file.name;
+			$scope.persona.foto=nombreFoto;
+		}
+		$scope.SubirdorArchivos.uploadAll();
+	}
+
+});
+
+
+
+miApp.controller('controlModificacion', function($scope, $http, $state, $stateParams, FileUploader)//, $routeParams, $location)
+{
+	$scope.persona={};
+	$scope.DatoTest="**Modificar**";
+	$scope.SubirdorArchivos = new FileUploader({url:'http://localhost/Clase.07/ws1/archivos'});  
 	$scope.persona.id=$stateParams.id;
 	$scope.persona.nombre=$stateParams.nombre;
 	$scope.persona.apellido=$stateParams.apellido;
@@ -420,7 +418,7 @@ miApp.controller('controlModificacion', function($scope, $http, $state, $statePa
 		});
 		};
 
-	$scope.Modificar=function(persona)
+	$scope.ModificarObjeto=function(persona)
 	{
 	
 		if($scope.SubirdorArchivos.queue[0]!=undefined)

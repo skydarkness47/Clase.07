@@ -60,7 +60,7 @@ $app->post('/personas/{objeto}', function ($request, $response, $args) {
             $rutaNueva=$persona->dni. "_". $i .".".PATHINFO($rutaVieja, PATHINFO_EXTENSION);
             copy($rutaVieja, "fotos/".$rutaNueva);
             unlink($rutaVieja);
-            $arrayFoto[]="http://localhost:8080/Clase.07/ws1/fotos/".$rutaNueva;
+            $arrayFoto[]="http://localhost/Clase.07/ws1/fotos/".$rutaNueva;
         } 
         $persona->foto=json_encode($arrayFoto); 
     }
@@ -90,7 +90,7 @@ $app->put('/personas/{objeto}', function ($request, $response, $args) {
         $rutaNueva=$persona->dni.".".PATHINFO($rutaVieja, PATHINFO_EXTENSION);
         copy($rutaVieja, "fotos/".$rutaNueva);
         unlink($rutaVieja);
-        $persona->foto="http://localhost:8080/Clase.07/ws1/fotos/".$rutaNueva;            
+        $persona->foto="http://localhost/Clase.07/ws1/fotos/".$rutaNueva;            
     }
     return $response->write(Persona::ModificarPersona($persona));
 
