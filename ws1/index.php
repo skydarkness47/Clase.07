@@ -60,7 +60,7 @@ $app->post('/personas/{objeto}', function ($request, $response, $args) {
             $rutaNueva=$persona->dni. "_". $i .".".PATHINFO($rutaVieja, PATHINFO_EXTENSION);
             copy($rutaVieja, "fotos/".$rutaNueva);
             unlink($rutaVieja);
-            $arrayFoto[]="http://localhost/Clase.07/ws1/fotos/".$rutaNueva;
+            $arrayFoto[]="http://localhost:8080/Clase.07/ws1/fotos/".$rutaNueva;
         } 
         $persona->foto=json_encode($arrayFoto); 
     }
@@ -83,14 +83,25 @@ $app->post('/archivos', function ($request, $response, $args) {
 
 // /* PUT: Para editar recursos */
 $app->put('/personas/{objeto}', function ($request, $response, $args) {
+
     $persona=json_decode($args['objeto']);
+    $persona->foto=explode(';',$persona->foto);
+    $arrayFoto = array();
+
+
     if($persona->foto != "pordefecto.png"){
-                        
-        $rutaVieja="fotos/".$persona->foto;
-        $rutaNueva=$persona->dni.".".PATHINFO($rutaVieja, PATHINFO_EXTENSION);
-        copy($rutaVieja, "fotos/".$rutaNueva);
-        unlink($rutaVieja);
-        $persona->foto="http://localhost/Clase.07/ws1/fotos/".$rutaNueva;            
+               
+         if(count($persona->foto) > 0){
+        for ($i = 0; $i < count($persona->foto); $i++ ){
+            $rutaVieja="fotos/".$persona->foto[$i];
+            $rutaNueva=$persona->dni. "_". $i .".".PATHINFO($rutaVieja, PATHINFO_EXTENSION);
+            copy($rutaVieja, "fotos/".$rutaNueva);
+            unlink($rutaVieja);
+            $arrayFoto[]="http://localhost:8080/Clase.07/ws1/fotos/".$rutaNueva;
+
+        } 
+        $persona->foto=json_encode($arrayFoto); 
+    }   
     }
     return $response->write(Persona::ModificarPersona($persona));
 
@@ -98,10 +109,11 @@ $app->put('/personas/{objeto}', function ($request, $response, $args) {
 
 // /* DELETE: Para eliminar recursos */
 $app->delete('/personas/{id}', function ($request, $response, $args) {
+
     return $response->write(Persona::BorrarPersona($args['id']));
 });
 /**
- * Step 4: Run the Slim application
+ * Step 4: Run the Slim applicatio
  *
  * This method should be called last. This executes the Slim application
  * and returns the HTTP response to the HTTP client.

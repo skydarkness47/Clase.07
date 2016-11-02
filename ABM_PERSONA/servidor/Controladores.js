@@ -1,6 +1,6 @@
 miApp.service('Grilla', function ($http) {
         
-var Url = 'http://localhost/Clase.07/ws1/';
+var Url = 'http://localhost:8080/Clase.07/ws1/';
 
   this.TraerTodos = TraerTodos;
   function TraerTodos(){

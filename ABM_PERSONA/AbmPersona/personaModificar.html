@@ -38,9 +38,12 @@
 						<span class="glyphicon glyphicon-trash"></span> Remove
 					</button>
 				</li>  
-				<img  ng-src="{{persona.foto}}" class="fotoform" id="foto" ng-model="persona.foto"/>
 
 				<p style='color: black;'>*El DNI no se puede modificar.</p>
+
+          <div> <td><img ng-repeat="fot in persona.foto" class='fotoGrilla' ng-src="{{fot}}"/></td></div>
+
+
 				<a class="btn btn-info " name="guardar" ng-disabled="FormIngreso.$invalid"  ng-click="ModificarObjeto(persona)" ><span class="glyphicon glyphicon-save">&nbsp;</span>Modificar</a> 
 					
 				<input type="hidden" value="" id="idParaModificar" name="agregar" />
